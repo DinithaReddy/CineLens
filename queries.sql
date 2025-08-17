@@ -71,3 +71,13 @@ JOIN FavoriteGenre fg ON mg.genre_id = fg.genre_id
 WHERE m.movie_id NOT IN (
     SELECT movie_id FROM Ratings WHERE user_id = 1 -- Exclude movies already rated by user
 );
+-- 7.Recommend movies for new users
+SELECT 
+    m.title,
+    ROUND(AVG(r.rating_value), 2) AS avg_rating,
+    COUNT(r.rating_id) AS rating_count
+FROM Movies m
+LEFT JOIN Ratings r ON m.movie_id = r.movie_id
+GROUP BY m.movie_id, m.title
+ORDER BY avg_rating DESC, rating_count DESC
+LIMIT 5;
